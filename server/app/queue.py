@@ -17,12 +17,10 @@ class TokenManager:
 
     def __init__(self):
         self.queue = []
-        #self.tokens = []
         self.last_id = 0
 
     def join(self, token):
         self.queue.append( token )
-        #self.tokens.append(token)
         self.last_id += 1
 
     def leave(self):
@@ -37,24 +35,35 @@ class TokenManager:
 
     def get_length(self):
         return len(self.queue)
-    
 
 
-manager = TokenManager()
 
-while True:
-    # 1. Add Token to Queue, 2. Leave Token
-    c = int(input())
+def main():
+    # Setup TokenManager
+    manager = TokenManager()
 
-    match c:
-        case 1:
-            manager.join( Token(manager.last_id, manager.get_length()-1 ))
+    # Main Testing Loop
+    while True:
+        
+        # 1. Add Token to Queue, 2. Leave Token
+        c = int(input())
 
-        case 2:
-            manager.leave()
+        match c:
+            case 1:
+                manager.join( Token(manager.last_id, manager.get_length()-1 ))
 
-        case 3:
-            manager.view()
+            case 2:
+                manager.leave()
 
-        case 4:
-            break
+            case 3:
+                manager.view()
+
+            case 4:
+                break
+
+
+# Entry Clause
+if (__name__ == "__main__") :
+    main()
+
+
