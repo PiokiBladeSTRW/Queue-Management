@@ -1,11 +1,22 @@
 # Central Queue
+import uuid
+import time
 
 class Token:
 
     def __init__(self, last_id, last_queue_pos):
-        self.token = ''
+        self.token = uuid.uuid4()
         self.token_id = 'T-' + str(last_id)
-        self.pos = last_queue_pos
+
+        self.status = "Waiting"
+        self.pos: int = last_queue_pos
+
+        self.creation_time = time.time()
+        self.leave_time: float = None
+
+    def leave(self):
+        self.status = "Left"
+        self.leave_time = time.time()
 
     def update_pos(self, pos = -1):
         if(pos != -1):
@@ -13,10 +24,13 @@ class Token:
 
         self.pos -= 1
 
+
 class TokenManager:
 
     def __init__(self):
-        self.queue = []
+        self.queue: list[Token] = []
+        self.past_tokens: list[Token] = []
+
         self.last_id = 0
 
     def join(self, token):
@@ -24,7 +38,13 @@ class TokenManager:
         self.last_id += 1
 
     def leave(self):
-        self.queue.pop( 0 )
+        if(self.is_empty()):
+            return -1
+
+        leaving_token = self.queue.pop( 0 )
+
+        self.past_tokens.append(leaving_token)
+        leaving_token.leave()
 
         for elem in self.queue:
             elem.update_pos()
@@ -33,8 +53,20 @@ class TokenManager:
         for elem in self.queue:
             print(elem.token_id, end=' ')
 
+        print()
+
+    def is_empty(self):
+        return self.get_length() == 0
+
     def get_length(self):
         return len(self.queue)
+
+    def get_time_data(self):
+        for elem in self.past_tokens:
+            if(elem.status == "Left"):
+                print(elem.token_id, "->", elem.leave_time - elem.creation_time)
+            
+
 
 
 
@@ -44,8 +76,8 @@ def main():
 
     # Main Testing Loop
     while True:
-        
-        # 1. Add Token to Queue, 2. Leave Token
+
+        # 1. Add Token to Queue, 2. Leave Token, 3. View, 4. Time Study
         c = int(input())
 
         match c:
@@ -59,6 +91,9 @@ def main():
                 manager.view()
 
             case 4:
+                manager.get_time_data()
+
+            case _:
                 break
 
 
