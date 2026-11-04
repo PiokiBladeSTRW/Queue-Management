@@ -1,33 +1,11 @@
 # Central Queue
 
-class Queue:
-
-    def __init__(self):
-        self.queue = []
-
-    def join(self, token):
-        self.queue.append( token.token_id )
-
-    def leave(self):
-        self.queue.pop( 0 )
-
-    def view(self):
-        for elem in self.queue:
-            print(elem)
-
-    def get_length(self):
-        return len(self.queue)
-
-
 class Token:
 
-    def __init__(self, last_id):
+    def __init__(self, last_id, last_queue_pos):
         self.token = ''
         self.token_id = 'T-' + str(last_id)
-        self.pos = 0
-
-    def set_start_pos(self, queue_pos):
-        self.pos = queue_pos
+        self.pos = last_queue_pos
 
     def update_pos(self, pos = -1):
         if(pos != -1):
@@ -35,10 +13,34 @@ class Token:
 
         self.pos -= 1
 
-tokens = []
-last_id = 0
+class TokenManager:
 
-queue = Queue()
+    def __init__(self):
+        self.queue = []
+        #self.tokens = []
+        self.last_id = 0
+
+    def join(self, token):
+        self.queue.append( token )
+        #self.tokens.append(token)
+        self.last_id += 1
+
+    def leave(self):
+        self.queue.pop( 0 )
+
+        for elem in self.queue:
+            elem.update_pos()
+
+    def view(self):
+        for elem in self.queue:
+            print(elem.token_id, end=' ')
+
+    def get_length(self):
+        return len(self.queue)
+    
+
+
+manager = TokenManager()
 
 while True:
     # 1. Add Token to Queue, 2. Leave Token
@@ -46,24 +48,13 @@ while True:
 
     match c:
         case 1:
-            temp_token = Token(last_id)
-            last_id += 1
-
-            tokens.append(temp_token)
-            queue.join(temp_token)
-            
-            temp_token.set_start_pos(queue.get_length() - 1)
+            manager.join( Token(manager.last_id, manager.get_length()-1 ))
 
         case 2:
-            queue.leave()
-            for temp_token in tokens:
-                temp_token.update_pos()
+            manager.leave()
 
         case 3:
-            queue.view()
+            manager.view()
 
         case 4:
             break
-
-        case _:
-            print("0")
