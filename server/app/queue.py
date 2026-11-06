@@ -1,6 +1,7 @@
 # Central Queue
 import uuid
 import time
+from fastapi import FastAPI
 
 class Token:
 
@@ -67,38 +68,24 @@ class TokenManager:
                 print(elem.token_id, "->", elem.leave_time - elem.creation_time)
             
 
+apiApp = FastAPI()
+manager = TokenManager()
 
 
+@apiApp.post("queue/create-token")
+def create_token():
+    manager.join( Token(manager.last_id, manager.get_length()-1) )
 
-def main():
-    # Setup TokenManager
-    manager = TokenManager()
-
-    # Main Testing Loop
-    while True:
-
-        # 1. Add Token to Queue, 2. Leave Token, 3. View, 4. Time Study
-        c = int(input())
-
-        match c:
-            case 1:
-                manager.join( Token(manager.last_id, manager.get_length()-1 ))
-
-            case 2:
-                manager.leave()
-
-            case 3:
-                manager.view()
-
-            case 4:
-                manager.get_time_data()
-
-            case _:
-                break
+@apiApp.post("queue/exit-token")
+def leave_token():
+    manager.leave()
 
 
-# Entry Clause
-if (__name__ == "__main__") :
-    main()
+@apiApp.get("queue/view")
+def view_queue():
+    manager.view()
 
+@apiApp.get("queue/time-data")
+def get_time_data():
+    manager.get_time_data()
 
