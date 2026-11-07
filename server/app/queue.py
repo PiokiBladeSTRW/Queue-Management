@@ -55,7 +55,7 @@ class TokenManager:
             elem.update_pos()
 
     def view(self):
-        queue_dict =  {i: self.queue[i].token_id for i in range(self.get_length())}
+        queue_dict =  {str(i): self.queue[i].token_id for i in range(self.get_length())}
         return queue_dict
 
 
@@ -70,7 +70,6 @@ class TokenManager:
     def get_length(self):
         return len(self.queue)
 
-            
 
 apiApp = FastAPI()
 manager = TokenManager()
@@ -85,7 +84,7 @@ def leave_token():
     manager.leave()
 
 
-@apiApp.get("/view")
+@apiApp.get("/view", response_model=dict[str,str])
 def view_queue():
     return manager.view()
 
