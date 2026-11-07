@@ -51,10 +51,14 @@ class TokenManager:
             elem.update_pos()
 
     def view(self):
-        for elem in self.queue:
-            print(elem.token_id, end=' ')
+        queue_dict =  {i: self.queue[i].token_id for i in range(self.get_length())}
+        return queue_dict
 
-        print()
+
+    def get_time_data(self):
+        for elem in self.past_tokens:
+            if(elem.status == "Left"):
+                print(elem.token_id, "->", elem.leave_time - elem.creation_time)
 
     def is_empty(self):
         return self.get_length() == 0
@@ -62,30 +66,25 @@ class TokenManager:
     def get_length(self):
         return len(self.queue)
 
-    def get_time_data(self):
-        for elem in self.past_tokens:
-            if(elem.status == "Left"):
-                print(elem.token_id, "->", elem.leave_time - elem.creation_time)
             
 
 apiApp = FastAPI()
 manager = TokenManager()
 
 
-@apiApp.post("queue/create-token")
+@apiApp.post("/create-token")
 def create_token():
     manager.join( Token(manager.last_id, manager.get_length()-1) )
 
-@apiApp.post("queue/exit-token")
+@apiApp.post("/exit-token")
 def leave_token():
     manager.leave()
 
 
-@apiApp.get("queue/view")
+@apiApp.get("/view")
 def view_queue():
-    manager.view()
+    return manager.view()
 
-@apiApp.get("queue/time-data")
+@apiApp.get("/time-data")
 def get_time_data():
     manager.get_time_data()
-
