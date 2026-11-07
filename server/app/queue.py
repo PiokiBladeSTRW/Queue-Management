@@ -12,8 +12,9 @@ class Token:
         self.status = "Waiting"
         self.pos: int = last_queue_pos
 
-        self.creation_time = time.time()
-        self.leave_time: float = None
+        self.issued_at = time.time()
+        self.called_at: float = None
+        self.served_at: float = None
 
     def leave(self):
         self.status = "Left"
@@ -24,6 +25,9 @@ class Token:
             return
 
         self.pos -= 1
+
+        if(self.pos == 0):
+            self.called_at = time.time()
 
 
 class TokenManager:
