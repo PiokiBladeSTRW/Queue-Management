@@ -15,8 +15,8 @@ class TokenManager:
         leaving_token = self.queue.pop( 0 )
         leaving_token.leave()
 
-        for elem in self.queue:
-            elem.update_pos()
+        for token in self.queue:
+            token.update_pos()
 
     def view(self):
         queue_dict =  {str(i): self.queue[i].token_id for i in range(self.get_length())}
@@ -27,13 +27,13 @@ class TokenManager:
     
     def get_info(self, id: str):
 
-        for elem in self.queue:
-            if(elem.token_id == id):
+        for token in self.queue:
+            if(token.token_id == id):
                 return {
-                    "ID": elem.token_id,
-                    "Position": elem.pos,
-                    "Status": elem.status,
-                    "Waiting Since": elem.issued_at
+                    "ID": token.token_id,
+                    "Position": token.pos,
+                    "Status": token.status,
+                    "Waiting Since": token.issued_at
                 }
 
         return -1
