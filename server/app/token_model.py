@@ -18,6 +18,9 @@ class Token:
         self.status = "Served"
         self.served_at = time.time()
 
+    def cancel(self):
+        self.status = "Cancelled"
+
     def update_pos(self, pos = -1):
         if(pos != -1):
             return

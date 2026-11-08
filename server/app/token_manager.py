@@ -20,6 +20,25 @@ class TokenManager:
         for token in self.queue:
             token.update_pos()
 
+    def cancel(self, id:str):
+
+        cancel_pos = -1
+
+        for elem in range(self.get_length()):
+            if(self.queue[elem].token_id == id):
+                self.queue[elem].cancel()
+                self.queue.pop(elem)
+
+                cancel_pos = elem
+                break
+
+        if(cancel_pos == -1):
+            return -1
+
+        for elem in range(cancel_pos, self.get_length()):
+            self.queue[elem].update_pos()            
+                
+
     def view(self):
         queue_dict =  {str(i): self.queue[i].token_id for i in range(self.get_length())}
         return queue_dict

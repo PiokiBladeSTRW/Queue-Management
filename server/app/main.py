@@ -16,6 +16,10 @@ def create_token():
 def leave_token():
     manager.leave()
 
+@apiApp.post("/cancel-token/{id}")
+def cancel_token(id: str):
+    manager.cancel(id)
+
 
 @apiApp.get("/view", response_model=dict[str,str])
 def view_queue():
