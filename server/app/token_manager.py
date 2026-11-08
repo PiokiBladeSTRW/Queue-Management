@@ -22,8 +22,21 @@ class TokenManager:
         queue_dict =  {str(i): self.queue[i].token_id for i in range(self.get_length())}
         return queue_dict
 
-    def is_empty(self):
-        return self.get_length() == 0
-
     def get_length(self):
         return len(self.queue)
+    
+    def get_info(self, id: str):
+
+        for elem in self.queue:
+            if(elem.token_id == id):
+                return {
+                    "ID": elem.token_id,
+                    "Position": elem.pos,
+                    "Status": elem.status,
+                    "Waiting Since": elem.issued_at
+                }
+
+        return -1
+    
+    def is_empty(self):
+        return self.get_length() == 0
