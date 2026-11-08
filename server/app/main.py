@@ -10,7 +10,7 @@ manager = TokenManager()
 
 @apiApp.post("/create-token")
 def create_token():
-    manager.join( Token(manager.last_id, manager.get_length()-1) )
+    manager.join( Token(manager.last_id, manager.get_length()) )
 
 @apiApp.post("/exit-token")
 def leave_token():
