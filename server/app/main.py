@@ -20,7 +20,3 @@ def leave_token():
 @apiApp.get("/view", response_model=dict[str,str])
 def view_queue():
     return manager.view()
-
-@apiApp.get("/time-data")
-def get_time_data():
-    manager.get_time_data()
