@@ -25,7 +25,7 @@ class TokenManager:
         cancel_pos = -1
 
         for elem in range(self.get_length()):
-            if(self.queue[elem].token_id == id):
+            if(self.queue[elem].id == id):
                 self.queue[elem].cancel()
                 self.queue.pop(elem)
 
@@ -40,7 +40,7 @@ class TokenManager:
                 
 
     def view(self):
-        queue_dict =  {str(i): self.queue[i].token_id for i in range(self.get_length())}
+        queue_dict =  {str(i): self.queue[i].id for i in range(self.get_length())}
         return queue_dict
 
     def get_length(self):
@@ -49,9 +49,9 @@ class TokenManager:
     def get_info(self, id: str):
 
         for token in self.queue:
-            if(token.token_id == id):
+            if(token.id == id):
                 return {
-                    "ID": token.token_id,
+                    "ID": token.id,
                     "Position": token.pos,
                     "Status": token.status,
                     "Waiting For": time.time() - token.issued_at

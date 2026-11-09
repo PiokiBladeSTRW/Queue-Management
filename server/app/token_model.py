@@ -5,7 +5,7 @@ class Token:
 
     def __init__(self, last_id, last_queue_pos):
         self.token = uuid.uuid4()
-        self.token_id = 'T-' + str(last_id)
+        self.id = 'T-' + str(last_id)
 
         self.status = "Waiting"
         self.pos: int = last_queue_pos
