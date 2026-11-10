@@ -1,5 +1,3 @@
-import time
-
 class TokenManager:
 
     def __init__(self):
@@ -57,8 +55,8 @@ class TokenManager:
                 return {
                     "ID": token.id,
                     "Position": token.pos,
-                    "Status": token.status,
-                    "Waiting For": time.time() - token.issued_at
+                    "Status": token.status
+                    #"Waiting For": time.time() - token.issued_at
                 }
 
         return -1
