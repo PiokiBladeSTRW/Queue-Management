@@ -26,15 +26,15 @@ def setup_database():
         )
     """)
 
-    # checking whether serving_started_at exists
-    cursor.execute("PRAGMA table_info(tokens)")
-    columns = [column[1] for column in cursor.fetchall()]
+    # # Update DB to newer version code
+    # cursor.execute("PRAGMA table_info(tokens)")
+    # columns = [column[1] for column in cursor.fetchall()]
 
-    if "serving_started_at" not in columns:
-        cursor.execute("""
-            ALTER TABLE tokens
-            ADD COLUMN serving_started_at TEXT
-        """)
+    # if "serving_started_at" not in columns:
+    #     cursor.execute("""
+    #         ALTER TABLE tokens
+    #         ADD COLUMN serving_started_at TEXT
+    #     """)
 
     conn.commit()
     conn.close()

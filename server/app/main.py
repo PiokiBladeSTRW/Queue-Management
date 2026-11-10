@@ -7,7 +7,7 @@ import server.app.database as db
 
 apiApp = FastAPI()
 manager = TokenManager()
-
+db.setup_database()
 
 @apiApp.post("/create-token")
 def create_token():
