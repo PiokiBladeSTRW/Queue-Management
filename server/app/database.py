@@ -16,9 +16,9 @@ def setup_database():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             display_id INTEGER NOT NULL,
             status TEXT NOT NULL,
-            issued_at TEXT NOT NULL,
-            serving_started_at TEXT,
-            served_at TEXT
+            issued_at INT NOT NULL,
+            called_at INT,
+            served_at INT
         )
     """)
 
@@ -39,7 +39,7 @@ def setup_database():
 
 
 # adding a new token
-def add_token(status="waiting"):
+def add_token(status="Waiting"):
     conn = sqlite3.connect(DB_NAME, isolation_level=None)
     cursor = conn.cursor()
 
@@ -67,11 +67,9 @@ def add_token(status="waiting"):
         INSERT INTO tokens (
             display_id,
             status,
-            issued_at,
-            serving_started_at,
-            served_at
+            issued_at
         )
-        VALUES (?, ?, ?, NULL, NULL)
+        VALUES (?, ?, ?)
     """, (display_id, status, issued_at))
 
     token_id = cursor.lastrowid
@@ -90,14 +88,14 @@ def change_status(token_id, new_status):
 
     current_time = time.time()
 
-    if new_status == "serving":
+    if new_status == "In Service":
         cursor.execute("""
             UPDATE tokens
-            SET status = ?, serving_started_at = ?
+            SET status = ?, called_at = ?
             WHERE id = ?
         """, (new_status, current_time, token_id))
 
-    elif new_status == "completed":
+    elif new_status == "Served":
         cursor.execute("""
             UPDATE tokens
             SET status = ?, served_at = ?
@@ -130,7 +128,7 @@ def get_all_tokens():
             display_id,
             status,
             issued_at,
-            serving_started_at,
+            called_at,
             served_at
         FROM tokens
         ORDER BY id ASC
@@ -151,7 +149,7 @@ def get_waiting_tokens():
     cursor.execute("""
         SELECT *
         FROM tokens
-        WHERE status = 'waiting'
+        WHERE status = 'Waiting'
         ORDER BY id ASC
     """)
 
@@ -171,7 +169,7 @@ def display_tokens():
         "Token",
         "Status",
         "Issued At",
-        "Serving Started At",
+        "Called At",
         "Served At"
     ]
 
@@ -228,11 +226,11 @@ if __name__ == "__main__":
     print("\nTokens generated successfully!")
 
     # updating token statuses
-    change_status(token1, "serving")
-    change_status(token1, "completed")
-    change_status(token2, "serving")
-    change_status(token2, "completed")
-    change_status(token3, "serving")
+    change_status(token1, "In Service")
+    change_status(token1, "Served")
+    change_status(token2, "In Service")
+    change_status(token2, "Served")
+    change_status(token3, "In Service")
    
 
     # displaying all tokens
