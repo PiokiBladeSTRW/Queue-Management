@@ -4,12 +4,10 @@ class TokenManager:
 
     def __init__(self):
         self.queue = []
-        self.last_id = 0
 
     def join(self, token):
         self.queue.append( token )
         return (self.get_length() - 1)
-        self.last_id += 1
 
     def leave(self):
         if(self.is_empty()):
