@@ -1,13 +1,8 @@
 
 import sqlite3
-from datetime import datetime
+import time
 
 DB_NAME = "../database/tokenqueue.db"
-
-
-# getting current date and time
-def get_current_time():
-    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 
 # setting up  database
@@ -47,7 +42,7 @@ def add_token(display_id, status="waiting"):
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 
-    issued_at = get_current_time()
+    issued_at = time.time()
 
     cursor.execute("""
         INSERT INTO tokens (
@@ -73,7 +68,7 @@ def change_status(token_id, new_status):
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 
-    current_time = get_current_time()
+    current_time = time.time()
 
     if new_status == "serving":
         cursor.execute("""
