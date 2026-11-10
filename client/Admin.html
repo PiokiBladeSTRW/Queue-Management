@@ -1,0 +1,467 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Queue System | Admin</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f3f7f7;
+            color: #263b3b;
+        }
+
+        /* Header */
+
+        header {
+            background: #087f80;
+            color: white;
+            padding: 22px 35px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            font-size: 25px;
+        }
+
+        header p {
+            font-size: 13px;
+            margin-top: 5px;
+            opacity: 0.85;
+        }
+
+        .admin-label {
+            background: #ffffff25;
+            padding: 10px 16px;
+            border-radius: 7px;
+            font-size: 14px;
+        }
+
+        /* Main content */
+
+        main {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 22px;
+        }
+
+        .welcome {
+            margin-bottom: 25px;
+        }
+
+        .welcome h2 {
+            font-size: 23px;
+        }
+
+        .welcome p {
+            color: #718080;
+            margin-top: 7px;
+            font-size: 14px;
+        }
+
+        /* Statistics */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 22px;
+            border-radius: 10px;
+            border: 1px solid #e0eaea;
+        }
+
+        .stat-card p {
+            color: #718080;
+            font-size: 14px;
+        }
+
+        .stat-card h2 {
+            color: #087f80;
+            font-size: 30px;
+            margin-top: 12px;
+        }
+
+        /* Dashboard layout */
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 20px;
+        }
+
+        .panel {
+            background: white;
+            padding: 23px;
+            border-radius: 10px;
+            border: 1px solid #e0eaea;
+        }
+
+        .panel h3 {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        /* Current token */
+
+        .current {
+            text-align: center;
+            background: #e8f5f3;
+            border-radius: 10px;
+            padding: 25px 15px;
+            margin-bottom: 20px;
+        }
+
+        .current p {
+            font-size: 13px;
+            color: #607777;
+        }
+
+        .current h1 {
+            font-size: 43px;
+            color: #087f80;
+            margin: 12px 0;
+        }
+
+        .current span {
+            font-size: 13px;
+            color: #607777;
+        }
+
+        /* Buttons */
+
+        .buttons {
+            display: flex;
+            gap: 9px;
+            margin-top: 15px;
+        }
+
+        button {
+            border: none;
+            padding: 12px 10px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .next {
+            background: #087f80;
+            color: white;
+            flex: 2;
+        }
+
+        .complete {
+            background: #d9f2e5;
+            color: #18794e;
+            flex: 1;
+        }
+
+        .skip {
+            background: #fff0dd;
+            color: #a96812;
+            flex: 1;
+        }
+
+        /* Queue table */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            min-width: 400px;
+        }
+
+        th {
+            text-align: left;
+            padding: 12px 8px;
+            color: #718080;
+            border-bottom: 1px solid #e4eeee;
+        }
+
+        td {
+            padding: 15px 8px;
+            border-bottom: 1px solid #edf1f1;
+        }
+
+        .token {
+            color: #087f80;
+            font-weight: bold;
+        }
+
+        .waiting {
+            background: #fff1d9;
+            color: #a36a12;
+            padding: 5px 9px;
+            border-radius: 12px;
+        }
+
+        /* Add token section */
+
+        .add-token {
+            border-top: 1px solid #e5eeee;
+            margin-top: 22px;
+            padding-top: 20px;
+        }
+
+        .add-token h3 {
+            margin-bottom: 14px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 11px;
+            margin-bottom: 12px;
+            border: 1px solid #cbdada;
+            border-radius: 6px;
+            font-size: 13px;
+            background: white;
+        }
+
+        .generate {
+            background: #087f80;
+            color: white;
+            width: 100%;
+        }
+
+        /* Footer */
+
+        footer {
+            text-align: center;
+            padding: 25px;
+            color: #899999;
+            font-size: 12px;
+        }
+
+        @media(max-width: 750px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            header {
+                padding: 18px;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div>
+            <h1>Virtual Queue</h1>
+            <p>Digital Queue Management System</p>
+        </div>
+
+        <div class="admin-label">
+            Admin Dashboard
+        </div>
+    </header>
+
+
+    <main>
+
+        <div class="welcome">
+            <h2>Welcome, Admin!</h2>
+            <p>Manage your service counter and monitor the current queue.</p>
+        </div>
+
+
+        <!-- Queue statistics -->
+
+        <section class="stats">
+
+            <div class="stat-card">
+                <p>Currently Waiting</p>
+                <h2>12</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Currently Serving</p>
+                <h2>01</h2>
+            </div>
+
+            <div class="stat-card">
+                <p>Completed Today</p>
+                <h2>28</h2>
+            </div>
+
+        </section>
+
+
+        <section class="dashboard">
+
+
+            <!-- Service counter -->
+
+            <div class="panel">
+
+                <h3>Service Counter</h3>
+
+                <div class="current">
+
+                    <p>CURRENTLY SERVING</p>
+
+                    <h1>A027</h1>
+
+                    <span>Atharva | Certificate Issue</span>
+
+                </div>
+
+
+                <div class="buttons">
+
+                    <button class="next">
+                        Call Next
+                    </button>
+
+                    <button class="complete">
+                        Complete
+                    </button>
+
+                    <button class="skip">
+                        Skip
+                    </button>
+
+                </div>
+
+
+                <!-- Manual token generation -->
+
+                <div class="add-token">
+
+                    <h3>Generate New Token</h3>
+
+                    <form action="/admin/add-token" method="POST">
+
+                        <input type="text"
+                               name="customer_name"
+                               placeholder="Customer name"
+                               required>
+
+                        <select name="service" required>
+
+                            <option value="" disabled selected>
+                                Select service
+                            </option>
+
+                            <option value="certificate">
+                                Certificate Issue
+                            </option>
+
+                            <option value="fees">
+                                Fee Payment
+                            </option>
+
+                            <option value="documents">
+                                Document Verification
+                            </option>
+
+                            <option value="enquiry">
+                                General Enquiry
+                            </option>
+
+                        </select>
+
+                        <button class="generate" type="submit">
+                            Generate Token
+                        </button>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+
+            <!-- Waiting queue -->
+
+            <div class="panel">
+
+                <h3>Waiting Queue</h3>
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+                            <tr>
+                                <th>Token</th>
+                                <th>Name</th>
+                                <th>Service</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <tr>
+                                <td class="token">A028</td>
+                                <td>Tejas</td>
+                                <td>Fee Payment</td>
+                                <td><span class="waiting">Waiting</span></td>
+                            </tr>
+
+                            <tr>
+                                <td class="token">A029</td>
+                                <td>Shaurya</td>
+                                <td>General Enquiry</td>
+                                <td><span class="waiting">Waiting</span></td>
+                            </tr>
+
+                            <tr>
+                                <td class="token">A030</td>
+                                <td>Santanu</td>
+                                <td>Document Verification</td>
+                                <td><span class="waiting">Waiting</span></td>
+                            </tr>
+
+                            <tr>
+                                <td class="token">A031</td>
+                                <td>Aditya</td>
+                                <td>Certificate Issue</td>
+                                <td><span class="waiting">Waiting</span></td>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <footer>
+        SmartQueue | Digital Queue Token System
+    </footer>
+
+</body>
+</html>
