@@ -1,6 +1,7 @@
 
 import sqlite3
 import time
+from datetime import datetime
 
 DB_NAME = "../database/tokenqueue.db"
 
@@ -13,7 +14,7 @@ def setup_database():
     cursor.execute("""
         CREATE TABLE IF NOT EXISTS tokens (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            display_id TEXT NOT NULL,
+            display_id INTEGER NOT NULL,
             status TEXT NOT NULL,
             issued_at TEXT NOT NULL,
             serving_started_at TEXT,
@@ -38,11 +39,29 @@ def setup_database():
 
 
 # adding a new token
-def add_token(display_id, status="waiting"):
-    conn = sqlite3.connect(DB_NAME)
+def add_token(status="waiting"):
+    conn = sqlite3.connect(DB_NAME, isolation_level=None)
     cursor = conn.cursor()
 
     issued_at = time.time()
+
+    today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+    midnight_epoch = int(today.timestamp())
+
+    # Lock method to avoid Token ID duplication
+    cursor.execute("BEGIN EXCLUSIVE")
+
+    cursor.execute("""
+        SELECT MAX(display_id)
+        FROM tokens
+        WHERE issued_at >= ?
+    """, (midnight_epoch))
+
+    result = cursor.fetchone()[0]
+
+    display_id: int = 1
+    if(result):
+        display_id = result + 1
 
     cursor.execute("""
         INSERT INTO tokens (
@@ -56,11 +75,12 @@ def add_token(display_id, status="waiting"):
     """, (display_id, status, issued_at))
 
     token_id = cursor.lastrowid
+    cursor.execute("COMMIT")
 
     conn.commit()
     conn.close()
 
-    return token_id
+    return (token_id, display_id)
 
 
 # change token status and record timestamps

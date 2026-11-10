@@ -3,9 +3,9 @@ import time
 
 class Token:
 
-    def __init__(self, last_id, last_queue_pos):
-        self.token = uuid.uuid4()
-        self.id = 'T-' + str(last_id)
+    def __init__(self, last_queue_pos):
+        self.id: int
+        self.display_id: str
 
         self.status = "Waiting"
         self.pos: int = last_queue_pos
@@ -13,6 +13,10 @@ class Token:
         self.issued_at = time.time()
         self.called_at: float = None
         self.served_at: float = None
+
+    def set_id(self, main_id:int, display_id:int):
+        self.id = main_id
+        self.display_id = 'T-' + display_id
 
     def leave(self):
         self.status = "Served"

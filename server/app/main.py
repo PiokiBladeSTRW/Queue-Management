@@ -11,7 +11,11 @@ db.setup_database()
 
 @apiApp.post("/create-token")
 def create_token():
-    manager.join( Token(manager.last_id, manager.get_length()) )
+    token = Token(manager.get_length())
+    ids = db.add_token(token)
+
+    token.set_id(ids[0], ids[1])
+    manager.join(token)
 
 @apiApp.post("/exit-token")
 def leave_token():
