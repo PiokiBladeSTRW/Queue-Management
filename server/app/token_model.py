@@ -22,6 +22,9 @@ class Token:
         self.pos = position
         self.issued_at = issued_at
 
+        if(self.pos == 0):
+            self.status = "In Service"
+
     def leave(self):
         self.status = "Served"
         self.served_at = time.time()
