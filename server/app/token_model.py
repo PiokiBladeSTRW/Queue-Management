@@ -10,13 +10,15 @@ class Token:
         self.status = "Waiting"
         self.pos: int = last_queue_pos
 
-        self.issued_at = time.time()
         self.called_at: float = None
         self.served_at: float = None
 
     def set_id(self, main_id:int, display_id:int):
         self.id = main_id
         self.display_id = 'T-' + display_id
+
+    def join(self, issued_at: float):
+        self.issued_at = issued_at
 
     def leave(self):
         self.status = "Served"

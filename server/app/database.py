@@ -80,7 +80,7 @@ def add_token(status="waiting"):
     conn.commit()
     conn.close()
 
-    return (token_id, display_id)
+    return (token_id, display_id, issued_at)
 
 
 # change token status and record timestamps

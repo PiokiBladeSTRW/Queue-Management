@@ -12,10 +12,12 @@ db.setup_database()
 @apiApp.post("/create-token")
 def create_token():
     token = Token(manager.get_length())
-    ids = db.add_token(token)
+    main_id, disp_id, issued_time = db.add_token(token)
 
-    token.set_id(ids[0], ids[1])
+    token.set_id(main_id, disp_id)
+    
     manager.join(token)
+    token.join(issued_time)
 
 @apiApp.post("/exit-token")
 def leave_token():
