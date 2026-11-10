@@ -16,8 +16,8 @@ def create_token():
 
     token.set_id(main_id, disp_id)
     
-    manager.join(token)
-    token.join(issued_time)
+    position = manager.join(token)
+    token.join(issued_time, position)
 
 @apiApp.post("/exit-token")
 def leave_token():

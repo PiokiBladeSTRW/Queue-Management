@@ -8,6 +8,7 @@ class TokenManager:
 
     def join(self, token):
         self.queue.append( token )
+        return (self.get_length() - 1)
         self.last_id += 1
 
     def leave(self):

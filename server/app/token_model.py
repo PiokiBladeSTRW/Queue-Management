@@ -3,13 +3,14 @@ import time
 
 class Token:
 
-    def __init__(self, last_queue_pos):
+    def __init__(self):
         self.id: int
         self.display_id: str
+        self.pos: int
 
         self.status = "Waiting"
-        self.pos: int = last_queue_pos
 
+        self.issued_at: float
         self.called_at: float = None
         self.served_at: float = None
 
@@ -17,7 +18,8 @@ class Token:
         self.id = main_id
         self.display_id = 'T-' + display_id
 
-    def join(self, issued_at: float):
+    def join(self, issued_at: float, position: int):
+        self.pos = position
         self.issued_at = issued_at
 
     def leave(self):
