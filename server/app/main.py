@@ -11,7 +11,7 @@ db.setup_database()
 
 @apiApp.post("/create-token")
 def create_token():
-    token = Token(manager.get_length())
+    token = Token()
     main_id, disp_id, issued_time = db.add_token(token)
 
     token.set_id(main_id, disp_id)
