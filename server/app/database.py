@@ -109,13 +109,9 @@ def change_status(token_id, new_status):
             SET status = ?, cancelled_at = ?
             WHERE id = ?
         """, (new_status, current_time, token_id))
-
-    updated = cursor.rowcount > 0
-
+        
     conn.commit()
     conn.close()
-
-    return current_time
 
 
 

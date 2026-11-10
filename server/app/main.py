@@ -25,12 +25,11 @@ def leave_token():
     if(left_token == -1):
         raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail="Cannot Leave: Queue is Empty")
 
-    served_at = db.change_status(left_token.id, "Served")
-    left_token.leave(served_at)
+    db.change_status(left_token.id, "Served")
 
     receiving_token = manager.get_receiving_service_token()
-    called_at = db.change_status(receiving_token.id, "In Service")
-    receiving_token.in_service(called_at)
+    db.change_status(receiving_token.id, "In Service")
+    receiving_token.in_service()
     
 
 @apiApp.post("/cancel-token/{id}")
@@ -39,7 +38,7 @@ def cancel_token(id: str):
     if(result == -1):
         raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail="Invalid User: Doesn't Exist")
 
-    called_at = db.change_status(id, "Cancelled")
+    db.change_status(id, "Cancelled")
 
 
 @apiApp.get("/view", response_model=dict[str,str])
