@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException, status
 from server.app.token_model import Token
 from server.app.token_manager import TokenManager
 import server.app.database as db
@@ -21,7 +21,17 @@ def create_token():
 
 @apiApp.post("/exit-token")
 def leave_token():
-    manager.leave()
+    left_token = manager.leave()
+    if(left_token == -1):
+        raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail="Cannot Leave: Queue is Empty")
+
+    served_at = db.change_status(left_token.id, "Served")
+    left_token.leave(served_at)
+
+    receiving_token = manager.get_receiving_service_token()
+    called_at = db.change_status(receiving_token.id, "In Service")
+    receiving_token.in_service(called_at)
+    
 
 @apiApp.post("/cancel-token/{id}")
 def cancel_token(id: str):

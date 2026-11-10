@@ -18,7 +18,8 @@ def setup_database():
             status TEXT NOT NULL,
             issued_at INT NOT NULL,
             called_at INT,
-            served_at INT
+            served_at INT,
+            cancelled_at INT
         )
     """)
 
@@ -88,33 +89,34 @@ def change_status(token_id, new_status):
 
     current_time = time.time()
 
-    if new_status == "In Service":
-        cursor.execute("""
-            UPDATE tokens
-            SET status = ?, called_at = ?
-            WHERE id = ?
-        """, (new_status, current_time, token_id))
-
-    elif new_status == "Served":
+    if new_status == "Served":
         cursor.execute("""
             UPDATE tokens
             SET status = ?, served_at = ?
             WHERE id = ?
         """, (new_status, current_time, token_id))
 
-    else:
+    elif new_status == "In Service":
         cursor.execute("""
             UPDATE tokens
-            SET status = ?
+            SET status = ?, called_at = ?
             WHERE id = ?
-        """, (new_status, token_id))
+        """, (new_status, current_time, token_id))
+
+    elif new_status == "Cancelled":
+        cursor.execute("""
+            UPDATE tokens
+            SET status = ?, cancelled_at = ?
+            WHERE id = ?
+        """, (new_status, current_time, token_id))
 
     updated = cursor.rowcount > 0
 
     conn.commit()
     conn.close()
 
-    return updated
+    return current_time
+
 
 
 # Getting all tokens

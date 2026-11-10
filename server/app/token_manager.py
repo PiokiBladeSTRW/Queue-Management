@@ -19,6 +19,8 @@ class TokenManager:
         for token in self.queue:
             token.update_pos()
 
+        return leaving_token
+
     def cancel(self, id:str):
 
         cancel_pos = -1
@@ -41,6 +43,9 @@ class TokenManager:
     def view(self):
         queue_dict =  {str(i): self.queue[i].id for i in range(self.get_length())}
         return queue_dict
+
+    def get_receiving_service_token(self):
+        return self.queue[0]
 
     def get_length(self):
         return len(self.queue)

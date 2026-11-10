@@ -25,19 +25,19 @@ class Token:
         if(self.pos == 0):
             self.status = "In Service"
 
-    def leave(self):
+    def leave(self, served_at: float):
         self.status = "Served"
-        self.served_at = time.time()
+        self.served_at = served_at
 
     def cancel(self):
         self.status = "Cancelled"
+
+    def in_service(self, called_at:float):
+        self.status = "In Service"
+        self.called_at = called_at
 
     def update_pos(self, pos = -1):
         if(pos != -1):
             return
 
         self.pos -= 1
-
-        if(self.pos == 0):
-            self.status = "In Service"
-            self.called_at = time.time()
