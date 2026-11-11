@@ -168,7 +168,8 @@ def display_tokens():
         "Status",
         "Issued At",
         "Called At",
-        "Served At"
+        "Served At",
+        "Cancelled At"
     ]
 
     widths = [5, 10, 13, 21, 22, 21]
