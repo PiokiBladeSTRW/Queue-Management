@@ -14,6 +14,7 @@ db.setup_database()
 class CreateTokenRequest(BaseModel):
     user_name: str = "Guest"
 
+
 @apiApp.post("/create-token")
 def create_token(request: CreateTokenRequest):
     token = Token(request.user_name)
@@ -35,9 +36,15 @@ def leave_token():
 
     db.change_status(left_token.id, "Served")
 
-    receiving_token = manager.get_receiving_service_token()
+    receiving_token: Token = manager.get_receiving_service_token()
     if(receiving_token != -1):
         db.change_status(receiving_token.id, "In Service")
+
+    return {
+        'id': receiving_token.id,
+        'disp_id': receiving_token.display_id,
+        'user_name': receiving_token.user_name
+    }
     
 
 @apiApp.post("/cancel-token/{id}")
