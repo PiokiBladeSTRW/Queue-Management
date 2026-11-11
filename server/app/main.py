@@ -1,4 +1,6 @@
 from fastapi import FastAPI, HTTPException, status
+from pydantic import BaseModel
+
 from server.app.token_model import Token
 from server.app.token_manager import TokenManager
 import server.app.database as db
@@ -9,10 +11,13 @@ apiApp = FastAPI()
 manager = TokenManager()
 db.setup_database()
 
+class CreateTokenRequest(BaseModel):
+    user_name: str = "Guest"
+
 @apiApp.post("/create-token")
-def create_token():
-    token = Token()
-    main_id, disp_id, issued_time = db.add_token()
+def create_token(request: CreateTokenRequest):
+    token = Token(request.user_name)
+    main_id, disp_id, issued_time = db.add_token(request.user_name)
 
     token.set_id(main_id, disp_id)
     

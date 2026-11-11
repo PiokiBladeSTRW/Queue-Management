@@ -1,9 +1,10 @@
 class Token:
 
-    def __init__(self):
+    def __init__(self, user_name: str):
         self.id: int
         self.display_id: str
         self.pos: int
+        self.user_name = user_name
 
         self.status = "Waiting"
 

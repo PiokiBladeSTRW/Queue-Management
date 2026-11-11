@@ -20,6 +20,7 @@ def setup_database():
         CREATE TABLE IF NOT EXISTS tokens (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             display_id INTEGER NOT NULL,
+            user_name TEXT NOT NULL,
             status TEXT NOT NULL,
             issued_at INT NOT NULL,
             called_at INT,
@@ -45,7 +46,7 @@ def setup_database():
 
 
 # adding a new token
-def add_token(status="Waiting"):
+def add_token(user_name: str, status="Waiting"):
     conn = sqlite3.connect(DB_NAME, isolation_level=None)
     cursor = conn.cursor()
 
@@ -72,11 +73,12 @@ def add_token(status="Waiting"):
     cursor.execute("""
         INSERT INTO tokens (
             display_id,
+            user_name,
             status,
             issued_at
         )
-        VALUES (?, ?, ?)
-    """, (display_id, status, issued_at))
+        VALUES (?, ?, ?, ?)
+    """, (display_id, user_name, status, issued_at))
 
     token_id = cursor.lastrowid
     cursor.execute("COMMIT")
@@ -129,6 +131,7 @@ def get_all_tokens():
         SELECT
             id,
             display_id,
+            user_name,
             status,
             issued_at,
             called_at,
@@ -171,6 +174,7 @@ def display_tokens():
     headers = [
         "ID",
         "Token",
+        "User Name",
         "Status",
         "Issued At",
         "Called At",
@@ -178,7 +182,7 @@ def display_tokens():
         "Cancelled At"
     ]
 
-    widths = [5, 10, 13, 21, 22, 21, 22]
+    widths = [5, 10, 10, 13, 21, 22, 21, 22]
 
     total_width = sum(widths) + 3 * (len(widths) - 1)
 
@@ -203,10 +207,11 @@ def display_tokens():
                 str(token[0]),
                 str(token[1]),
                 str(token[2]),
-                str(token[3] or "N/A"),
+                str(token[3]),
                 str(token[4] or "N/A"),
                 str(token[5] or "N/A"),
-                str(token[6] or "N/A")
+                str(token[6] or "N/A"),
+                str(token[7] or "N/A")
             ]
 
             print(" | ".join(
