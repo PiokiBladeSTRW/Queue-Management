@@ -58,7 +58,7 @@ def cancel_token(id: int):
 
 
 
-@apiApp.get("/view", response_model=dict[str,str])
+@apiApp.get("/view", response_model=list[dict[str,str|int]])
 def view_queue():
     return manager.view()
 

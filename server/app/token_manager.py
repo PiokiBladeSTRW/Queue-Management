@@ -37,8 +37,17 @@ class TokenManager:
                 
 
     def view(self):
-        queue_dict =  {str(i): self.queue[i].display_id for i in range(self.get_length())}
-        return queue_dict
+        queue_data = []
+
+        for i in range(self.get_length()):
+            queue_dict= {
+                "id": self.queue[i].id,
+                "disp_id": self.queue[i].display_id,
+                "name": self.queue[i].user_name
+            }
+            queue_data.append(queue_dict)
+            
+        return queue_data
 
     def get_receiving_service_token(self):
         if(self.get_length() > 0):
