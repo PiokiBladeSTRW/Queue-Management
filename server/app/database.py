@@ -2,12 +2,17 @@
 import sqlite3
 import time
 from datetime import datetime
+from pathlib import Path
 
-DB_NAME = "../database/tokenqueue.db"
+BASE_DIR = Path(__file__).parent.parent
+DB_DIR = BASE_DIR / "database"
+DB_NAME = DB_DIR / "tokens.db"
 
 
 # setting up  database
 def setup_database():
+    DB_DIR.mkdir(parents=True, exist_ok=True)
+
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 
@@ -44,7 +49,7 @@ def add_token(status="Waiting"):
     conn = sqlite3.connect(DB_NAME, isolation_level=None)
     cursor = conn.cursor()
 
-    issued_at = time.time()
+    issued_at = int(time.time())
 
     today = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
     midnight_epoch = int(today.timestamp())
@@ -56,7 +61,7 @@ def add_token(status="Waiting"):
         SELECT MAX(display_id)
         FROM tokens
         WHERE issued_at >= ?
-    """, (midnight_epoch))
+    """, (midnight_epoch,))
 
     result = cursor.fetchone()[0]
 
@@ -87,7 +92,7 @@ def change_status(token_id, new_status):
     conn = sqlite3.connect(DB_NAME)
     cursor = conn.cursor()
 
-    current_time = time.time()
+    current_time = int(time.time())
 
     if new_status == "Served":
         cursor.execute("""
@@ -127,7 +132,8 @@ def get_all_tokens():
             status,
             issued_at,
             called_at,
-            served_at
+            served_at,
+            cancelled_at
         FROM tokens
         ORDER BY id ASC
     """)
@@ -172,7 +178,7 @@ def display_tokens():
         "Cancelled At"
     ]
 
-    widths = [5, 10, 13, 21, 22, 21]
+    widths = [5, 10, 13, 21, 22, 21, 22]
 
     total_width = sum(widths) + 3 * (len(widths) - 1)
 
@@ -199,7 +205,8 @@ def display_tokens():
                 str(token[2]),
                 str(token[3] or "N/A"),
                 str(token[4] or "N/A"),
-                str(token[5] or "N/A")
+                str(token[5] or "N/A"),
+                str(token[6] or "N/A")
             ]
 
             print(" | ".join(
@@ -211,26 +218,28 @@ def display_tokens():
 
 
 #  main program
-if __name__ == "__main__":
+if __name__ == "__main__":\
 
     setup_database()
 
-    # generating sample tokens
-    token1 = add_token("A001")
-    token2 = add_token("A002")
-    token3 = add_token("A003")
-    token4 = add_token("A004")
+    display_tokens()
+
+    # # generating sample tokens
+    # token1 = add_token("A001")
+    # token2 = add_token("A002")
+    # token3 = add_token("A003")
+    # token4 = add_token("A004")
     
 
-    print("\nTokens generated successfully!")
+    # print("\nTokens generated successfully!")
 
-    # updating token statuses
-    change_status(token1, "In Service")
-    change_status(token1, "Served")
-    change_status(token2, "In Service")
-    change_status(token2, "Served")
-    change_status(token3, "In Service")
+    # # updating token statuses
+    # change_status(token1, "In Service")
+    # change_status(token1, "Served")
+    # change_status(token2, "In Service")
+    # change_status(token2, "Served")
+    # change_status(token3, "In Service")
    
 
-    # displaying all tokens
-    display_tokens()
+    # # displaying all tokens
+    # display_tokens()

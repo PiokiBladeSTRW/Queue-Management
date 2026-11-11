@@ -12,12 +12,15 @@ db.setup_database()
 @apiApp.post("/create-token")
 def create_token():
     token = Token()
-    main_id, disp_id, issued_time = db.add_token(token)
+    main_id, disp_id, issued_time = db.add_token()
 
     token.set_id(main_id, disp_id)
     
     position = manager.join(token)
     token.join(issued_time, position)
+
+    if(position == 0):
+        db.change_status(main_id, "In Service")
 
 @apiApp.post("/exit-token")
 def leave_token():
@@ -28,23 +31,32 @@ def leave_token():
     db.change_status(left_token.id, "Served")
 
     receiving_token = manager.get_receiving_service_token()
-    db.change_status(receiving_token.id, "In Service")
-    receiving_token.in_service()
+    if(receiving_token != -1):
+        db.change_status(receiving_token.id, "In Service")
     
 
 @apiApp.post("/cancel-token/{id}")
-def cancel_token(id: str):
+def cancel_token(id: int):
+    inital_receiving_tok = manager.get_receiving_service_token()
+
     result = manager.cancel(id)
     if(result == -1):
         raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail="Invalid User: Doesn't Exist")
 
     db.change_status(id, "Cancelled")
 
+    final_receiving_tok = manager.get_receiving_service_token()
+
+    if((inital_receiving_tok != final_receiving_tok) and (final_receiving_tok != -1)):
+        db.change_status(final_receiving_tok.id, "In Service")
+
+
+
 
 @apiApp.get("/view", response_model=dict[str,str])
 def view_queue():
     return manager.view()
 
-@apiApp.get("/info/{id}")
-def get_info(id: str):
-    return manager.get_info(id)
+@apiApp.get("/info/{disp_id}")
+def get_info(disp_id: str):
+    return manager.get_info(disp_id)

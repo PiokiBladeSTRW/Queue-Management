@@ -11,7 +11,7 @@ class Token:
 
     def set_id(self, main_id:int, display_id:int):
         self.id = main_id
-        self.display_id = 'T-' + display_id
+        self.display_id = 'T-' + str(display_id)
 
     def join(self, issued_at: float, position: int):
         self.pos = position

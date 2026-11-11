@@ -12,20 +12,18 @@ class TokenManager:
             return -1
 
         leaving_token = self.queue.pop( 0 )
-        leaving_token.leave()
 
         for token in self.queue:
             token.update_pos()
 
         return leaving_token
 
-    def cancel(self, id:str):
+    def cancel(self, id:int):
 
         cancel_pos = -1
 
         for elem in range(self.get_length()):
             if(self.queue[elem].id == id):
-                self.queue[elem].cancel()
                 self.queue.pop(elem)
 
                 cancel_pos = elem
@@ -39,21 +37,25 @@ class TokenManager:
                 
 
     def view(self):
-        queue_dict =  {str(i): self.queue[i].id for i in range(self.get_length())}
+        queue_dict =  {str(i): self.queue[i].display_id for i in range(self.get_length())}
         return queue_dict
 
     def get_receiving_service_token(self):
-        return self.queue[0]
+        if(self.get_length() > 0):
+            return self.queue[0]    
+
+        return -1
 
     def get_length(self):
         return len(self.queue)
     
-    def get_info(self, id: str):
+    def get_info(self, disp_id: str):
 
         for token in self.queue:
-            if(token.id == id):
+            if(token.display_id == disp_id):
                 return {
                     "ID": token.id,
+                    "Display ID": token.display_id,
                     "Position": token.pos,
                     "Status": token.status
                     #"Waiting For": time.time() - token.issued_at
