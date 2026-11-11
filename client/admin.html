@@ -165,12 +165,6 @@
             flex: 2;
         }
 
-        .complete {
-            background: #d9f2e5;
-            color: #18794e;
-            flex: 1;
-        }
-
         .skip {
             background: #fff0dd;
             color: #a96812;
@@ -325,24 +319,20 @@
 
                     <p>CURRENTLY SERVING</p>
 
-                    <h1>A027</h1>
+                    <h1 id="current-token">--</h1>
 
-                    <span>Atharva | Certificate Issue</span>
+                    <span id="customer-name">Waiting for next...</span>
 
                 </div>
 
 
                 <div class="buttons">
 
-                    <button class="next">
+                    <button id="btn-next" class="next">
                         Call Next
                     </button>
 
-                    <button class="complete">
-                        Complete
-                    </button>
-
-                    <button class="skip">
+                    <button id="btn-skip" class="skip">
                         Skip
                     </button>
 
@@ -355,36 +345,11 @@
 
                     <h3>Generate New Token</h3>
 
-                    <form action="/admin/add-token" method="POST">
+                    <form id="add-token-form">
 
-                        <input type="text"
-                               name="customer_name"
-                               placeholder="Customer name"
-                               required>
-
-                        <select name="service" required>
-
-                            <option value="" disabled selected>
-                                Select service
-                            </option>
-
-                            <option value="certificate">
-                                Certificate Issue
-                            </option>
-
-                            <option value="fees">
-                                Fee Payment
-                            </option>
-
-                            <option value="documents">
-                                Document Verification
-                            </option>
-
-                            <option value="enquiry">
-                                General Enquiry
-                            </option>
-
-                        </select>
+                        <input id="input-name"
+                               type="text"
+                               placeholder="Customer name">
 
                         <button class="generate" type="submit">
                             Generate Token
@@ -409,42 +374,13 @@
 
                         <thead>
                             <tr>
-                                <th>Token</th>
-                                <th>Name</th>
-                                <th>Service</th>
-                                <th>Status</th>
+                                <th>ID</th>
+                                <th>Display ID</th>
+                                <th>User Name</th>
                             </tr>
                         </thead>
 
-                        <tbody>
-
-                            <tr>
-                                <td class="token">A028</td>
-                                <td>Tejas</td>
-                                <td>Fee Payment</td>
-                                <td><span class="waiting">Waiting</span></td>
-                            </tr>
-
-                            <tr>
-                                <td class="token">A029</td>
-                                <td>Shaurya</td>
-                                <td>General Enquiry</td>
-                                <td><span class="waiting">Waiting</span></td>
-                            </tr>
-
-                            <tr>
-                                <td class="token">A030</td>
-                                <td>Santanu</td>
-                                <td>Document Verification</td>
-                                <td><span class="waiting">Waiting</span></td>
-                            </tr>
-
-                            <tr>
-                                <td class="token">A031</td>
-                                <td>Aditya</td>
-                                <td>Certificate Issue</td>
-                                <td><span class="waiting">Waiting</span></td>
-                            </tr>
+                        <tbody id="queue-table-body">
 
                         </tbody>
 
@@ -462,6 +398,8 @@
     <footer>
         SmartQueue | Digital Queue Token System
     </footer>
+
+    <script src="admin.js"> </script>
 
 </body>
 </html>

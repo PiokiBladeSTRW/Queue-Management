@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 
 from server.app.token_model import Token
@@ -10,6 +11,14 @@ import server.app.database as db
 apiApp = FastAPI()
 manager = TokenManager()
 db.setup_database()
+
+apiApp.add_middleware(
+    CORSMiddleware,
+    allow_origins= ["http://127.0.0.1:5500", "http://127.0.0.1:5500"],
+    allow_credentials= True,
+    allow_methods=["GET", "POST"],
+    allow_headers=["Content-Type"]
+)
 
 class CreateTokenRequest(BaseModel):
     user_name: str = "Guest"
@@ -40,11 +49,11 @@ def leave_token():
     if(receiving_token != -1):
         db.change_status(receiving_token.id, "In Service")
 
-    return {
-        'id': receiving_token.id,
-        'disp_id': receiving_token.display_id,
-        'user_name': receiving_token.user_name
-    }
+        return {
+            'id': receiving_token.id,
+            'disp_id': receiving_token.display_id,
+            'user_name': receiving_token.user_name
+        }
     
 
 @apiApp.post("/cancel-token/{id}")
