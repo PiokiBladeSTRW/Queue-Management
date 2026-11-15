@@ -84,6 +84,11 @@ def get_first_token():
             "user_name": receiving_tok.user_name
         }
 
+@apiApp.get("/get_length")
+def get_length():
+    length = manager.get_length()
+    return {"length": length}
+
 @apiApp.get("/view", response_model=list[dict[str,str|int]])
 def view_queue():
     return manager.view()

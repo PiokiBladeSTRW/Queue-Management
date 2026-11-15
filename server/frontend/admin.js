@@ -52,6 +52,20 @@ async function fetchFirst() {
     }
 }
 
+// Show Data
+async function fetchData() {
+    try {
+        // Queue Lenggth
+        const response = await fetch (`${API_BASE}/get_length`);
+        const data = await response.json();
+
+        document.getElementById("waiting-count").innerText = `${data.length}`
+
+    } catch (error) {
+        console.error("Error Fetching Data: ", error)
+    }
+}
+
 // Generate Token
 document.getElementById("add-token-form").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -102,3 +116,4 @@ document.getElementById("btn-next").addEventListener("click", async() => {
 
 fetchQueue();
 fetchFirst();
+fetchData();
