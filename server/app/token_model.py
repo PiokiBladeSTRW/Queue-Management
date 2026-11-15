@@ -1,14 +1,13 @@
 class Token:
 
     def __init__(self, user_name: str):
-        self.id: int
-        self.display_id: str
-        self.pos: int
+        self.id: int = None
+        self.display_id: str = None
+        self.pos: int = None
+        self.issued_at: float = None
+
         self.user_name = user_name
-
         self.status = "Waiting"
-
-        self.issued_at: float
 
     def set_id(self, main_id:int, display_id:int):
         self.id = main_id
