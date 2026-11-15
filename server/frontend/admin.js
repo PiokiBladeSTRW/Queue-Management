@@ -32,6 +32,26 @@ async function fetchQueue() {
     }
 }
 
+// Show Next
+async function fetchFirst() {
+    try {
+        const response = await fetch(`${API_BASE}/get_first`);
+        const data = await response.json();
+
+        if(data.length == 0) {
+            currentToken.innerText = "---";
+            customerName.innerText = "Waiting for next";
+        } else {
+            currentToken.innerText = `${data.id} : ${data.disp_id}`;
+            customerName.innerText = `${data.user_name}`;
+        }
+
+
+    } catch (error) {
+        console.error("Error Fetching Queue: ", error);
+    }
+}
+
 // Generate Token
 document.getElementById("add-token-form").addEventListener("submit", async (e) => {
     e.preventDefault();
@@ -81,3 +101,4 @@ document.getElementById("btn-next").addEventListener("click", async() => {
 })
 
 fetchQueue();
+fetchFirst();

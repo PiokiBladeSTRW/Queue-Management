@@ -72,7 +72,17 @@ def cancel_token(id: int):
         db.change_status(final_receiving_tok.id, "In Service")
 
 
+@apiApp.get("/get_first")
+def get_first_token():
+    receiving_tok = manager.get_receiving_service_token()
 
+    if(receiving_tok != -1):
+
+        return {
+            "id": receiving_tok.id,
+            "disp_id": receiving_tok.display_id,
+            "user_name": receiving_tok.user_name
+        }
 
 @apiApp.get("/view", response_model=list[dict[str,str|int]])
 def view_queue():
