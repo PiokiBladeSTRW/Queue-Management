@@ -7,7 +7,7 @@ from server.app.token_manager import TokenManager
 import server.app.database as db
 
 
-
+# Setup
 apiApp = FastAPI()
 manager = TokenManager()
 db.setup_database()
@@ -20,10 +20,12 @@ apiApp.add_middleware(
     allow_headers=["Content-Type"]
 )
 
+# Request Format Specifiers
 class CreateTokenRequest(BaseModel):
     user_name: str = "Guest"
 
 
+# API ENDPOINTS
 @apiApp.post("/create-token")
 def create_token(request: CreateTokenRequest):
     token = Token(request.user_name)
@@ -55,7 +57,6 @@ def leave_token():
             'user_name': receiving_token.user_name
         }
     
-
 @apiApp.post("/cancel-token/{id}")
 def cancel_token(id: int):
     inital_receiving_tok = manager.get_receiving_service_token()
@@ -72,6 +73,16 @@ def cancel_token(id: int):
         db.change_status(final_receiving_tok.id, "In Service")
 
 
+
+@apiApp.get("/view", response_model=list[dict[str,str|int]])
+def view_queue():
+    return manager.view()
+
+@apiApp.get("/get_length")
+def get_length():
+    length = manager.get_length()
+    return {"length": length}
+
 @apiApp.get("/get_first")
 def get_first_token():
     receiving_tok = manager.get_receiving_service_token()
@@ -83,15 +94,6 @@ def get_first_token():
             "disp_id": receiving_tok.display_id,
             "user_name": receiving_tok.user_name
         }
-
-@apiApp.get("/get_length")
-def get_length():
-    length = manager.get_length()
-    return {"length": length}
-
-@apiApp.get("/view", response_model=list[dict[str,str|int]])
-def view_queue():
-    return manager.view()
 
 @apiApp.get("/info/{disp_id}")
 def get_info(disp_id: str):
