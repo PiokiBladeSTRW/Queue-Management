@@ -8,8 +8,7 @@ class TokenManager:
         return (self.get_length() - 1)
 
     def leave(self):
-        if(self.is_empty()):
-            return -1
+        raise IndexError("Queue is Empty!")
 
         leaving_token = self.queue.pop( 0 )
 
@@ -19,7 +18,6 @@ class TokenManager:
         return leaving_token
 
     def cancel(self, id:int):
-
         cancel_pos = -1
 
         for elem in range(self.get_length()):
@@ -30,11 +28,12 @@ class TokenManager:
                 break
 
         if(cancel_pos == -1):
-            return -1
+            raise ValueError("No Token of such ID")
 
         for elem in range(cancel_pos, self.get_length()):
             self.queue[elem].update_pos()            
                 
+
 
     def view(self):
         queue_data = []
@@ -49,14 +48,14 @@ class TokenManager:
             
         return queue_data
 
+
     def get_receiving_service_token(self):
         if(self.get_length() > 0):
             return self.queue[0]    
 
-        return -1
+        return IndexError("Queue is Empty")
 
-    def get_length(self):
-        return len(self.queue)
+
     
     def get_info(self, disp_id: str):
 
@@ -70,7 +69,10 @@ class TokenManager:
                     #"Waiting For": time.time() - token.issued_at
                 }
 
-        return -1
+        raise ValueError("No Token of such ID")
+
+    def get_length(self):
+        return len(self.queue)
     
     def is_empty(self):
         return self.get_length() == 0
