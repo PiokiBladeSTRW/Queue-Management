@@ -48,7 +48,7 @@ async function fetchFirst() {
 
 
     } catch (error) {
-        console.error("Error Fetching Queue: ", error);
+        console.error("Error Fetching Serving Data: ", error);
     }
 }
 
