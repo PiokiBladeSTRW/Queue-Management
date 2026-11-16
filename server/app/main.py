@@ -32,8 +32,7 @@ tokens = db.get_waiting_tokens()
 # (id, disp_id, user_name, issued_at)
 for stored_token in (receiving_token+tokens):
     token = Token(stored_token[2])
-    token.set_id(stored_token[0], stored_token[1])
-    token.set_issued_time(stored_token[3])
+    token.set_default(stored_token[0], stored_token[1], stored_token[3])
 
     manager.join(token)
 
@@ -43,7 +42,7 @@ def create_token(request: CreateTokenRequest):
     token = Token(request.user_name)
     main_id, disp_id, issued_time = db.add_token(request.user_name)
 
-    token.set_id(main_id, disp_id)
+    token.set_default(main_id, disp_id)
     
     position = manager.join(token)
     token.join(issued_time, position)
