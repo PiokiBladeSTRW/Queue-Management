@@ -1,18 +1,18 @@
 class Token:
 
     def __init__(self, user_name: str):
-        self.id: int
-        self.display_id: str
-        self.pos: int
-        self.user_name = user_name
+        self.id: int = None
+        self.display_id: str = None
+        self.pos: int = None
+        self.issued_at: float = None
 
+        self.user_name = user_name
         self.status = "Waiting"
 
-        self.issued_at: float
-
-    def set_id(self, main_id:int, display_id:int):
+    def set_default(self, main_id:int, display_id:int, issued_at = None):
         self.id = main_id
         self.display_id = 'T-' + str(display_id)
+        self.issued_at = issued_at
 
     def join(self, issued_at: float, position: int):
         self.pos = position

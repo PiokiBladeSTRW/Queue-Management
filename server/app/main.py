@@ -41,14 +41,12 @@ def create_token(request: CreateTokenRequest):
 
 @apiApp.post("/exit-token")
 def leave_token():
-    left_token = manager.leave()
-    if(left_token == -1):
-        raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail="Cannot Leave: Queue is Empty")
 
-    db.change_status(left_token.id, "Served")
+    try:
+        left_token = manager.leave()
+        db.change_status(left_token.id, "Served")
 
-    receiving_token: Token = manager.get_receiving_service_token()
-    if(receiving_token != -1):
+        receiving_token: Token = manager.get_receiving_service_token()    
         db.change_status(receiving_token.id, "In Service")
 
         return {
@@ -56,21 +54,23 @@ def leave_token():
             'disp_id': receiving_token.display_id,
             'user_name': receiving_token.user_name
         }
+
+    except IndexError as e:
+        raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail=e)
     
 @apiApp.post("/cancel-token/{id}")
 def cancel_token(id: int):
-    inital_receiving_tok = manager.get_receiving_service_token()
+    try:
+        inital_receiving_tok = manager.get_receiving_service_token()
+        result = manager.cancel(id)
+        db.change_status(id, "Cancelled")
 
-    result = manager.cancel(id)
-    if(result == -1):
-        raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail="Invalid User: Doesn't Exist")
-
-    db.change_status(id, "Cancelled")
-
-    final_receiving_tok = manager.get_receiving_service_token()
-
-    if((inital_receiving_tok != final_receiving_tok) and (final_receiving_tok != -1)):
+        final_receiving_tok = manager.get_receiving_service_token()
         db.change_status(final_receiving_tok.id, "In Service")
+
+    except (IndexError, ValueError) as e:
+        raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail=e)
+
 
 
 
@@ -85,16 +85,22 @@ def get_length():
 
 @apiApp.get("/get_first")
 def get_first_token():
-    receiving_tok = manager.get_receiving_service_token()
-
-    if(receiving_tok != -1):
+    try:
+        receiving_tok = manager.get_receiving_service_token()
 
         return {
             "id": receiving_tok.id,
             "disp_id": receiving_tok.display_id,
             "user_name": receiving_tok.user_name
         }
+    
+    except IndexError as e:
+        raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail=e)
 
 @apiApp.get("/info/{disp_id}")
 def get_info(disp_id: str):
-    return manager.get_info(disp_id)
+    try:
+        return manager.get_info(disp_id)
+    
+    except ValueError as e:
+        raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail=e)
