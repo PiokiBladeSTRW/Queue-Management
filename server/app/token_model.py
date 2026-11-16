@@ -10,6 +10,9 @@ class Token:
 
         self.issued_at: float
 
+    def set_issued_time(self, issued_at: float):
+        self.issued_at = issued_at
+
     def set_id(self, main_id:int, display_id:int):
         self.id = main_id
         self.display_id = 'T-' + str(display_id)

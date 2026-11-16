@@ -154,7 +154,7 @@ def get_waiting_tokens():
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT *
+        SELECT id, display_id, user_name, issued_at
         FROM tokens
         WHERE status = 'Waiting'
         ORDER BY id ASC
