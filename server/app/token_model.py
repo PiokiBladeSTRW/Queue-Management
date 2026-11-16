@@ -9,9 +9,10 @@ class Token:
         self.user_name = user_name
         self.status = "Waiting"
 
-    def set_id(self, main_id:int, display_id:int):
+    def set_default(self, main_id:int, display_id:int, issued_at = None):
         self.id = main_id
         self.display_id = 'T-' + str(display_id)
+        self.issued_at = issued_at
 
     def join(self, issued_at: float, position: int):
         self.pos = position
