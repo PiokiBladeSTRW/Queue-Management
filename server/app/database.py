@@ -154,7 +154,7 @@ def get_waiting_tokens():
     cursor = conn.cursor()
 
     cursor.execute("""
-        SELECT *
+        SELECT id, display_id, user_name, issued_at
         FROM tokens
         WHERE status = 'Waiting'
         ORDER BY id ASC
@@ -166,6 +166,22 @@ def get_waiting_tokens():
 
     return rows
 
+# Get Last Serving Token
+def get_receiving_token():
+    conn = sqlite3.connect(DB_NAME)
+    cursor = conn.cursor()
+
+    cursor.execute("""
+        SELECT id, display_id, user_name, issued_at
+        FROM tokens
+        WHERE status = 'In Service'
+    """)
+
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return rows
 
 #  displaying all tokens in table format
 def display_tokens():

@@ -25,7 +25,19 @@ class CreateTokenRequest(BaseModel):
     user_name: str = "Guest"
 
 
-# API ENDPOINTS
+# Bring Queue from DB
+receiving_token = db.get_receiving_token()
+tokens = db.get_waiting_tokens()
+
+# (id, disp_id, user_name, issued_at)
+for stored_token in (receiving_token+tokens):
+    token = Token(stored_token[2])
+    token.set_id(stored_token[0], stored_token[1])
+    token.set_issued_time(stored_token[3])
+
+    manager.join(token)
+
+
 @apiApp.post("/create-token")
 def create_token(request: CreateTokenRequest):
     token = Token(request.user_name)
