@@ -13,7 +13,7 @@ async function fetchQueue() {
         const tokens = await response.json();
 
         tableBody.innerHTML ="";
-        if(tokens.lenth == 0) {
+        if(!response.ok || tokens.length == 0) {
             tableBody.innerHTML = `<tr><td colspan="4" style="text-align: center;"> Queue is empty</td></tr>`;
             return;
         }
@@ -38,7 +38,7 @@ async function fetchFirst() {
         const response = await fetch(`${API_BASE}/get_first`);
         const data = await response.json();
 
-        if(data.length == 0) {
+        if(!response.ok || data.length == 0) {
             currentToken.innerText = "---";
             customerName.innerText = "Waiting for next";
         } else {
