@@ -34,7 +34,8 @@ for stored_token in (receiving_token+tokens):
     token = Token(stored_token[2])
     token.set_default(stored_token[0], stored_token[1], stored_token[3])
 
-    manager.join(token)
+    pos = manager.join(token)
+    token.join(stored_token[3], pos)
 
 
 @apiApp.post("/create-token")
@@ -67,7 +68,7 @@ def leave_token():
         }
 
     except IndexError as e:
-        raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail=e)
+        raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail=str(e))
     
 @apiApp.post("/cancel-token/{id}")
 def cancel_token(id: int):
@@ -80,7 +81,7 @@ def cancel_token(id: int):
         db.change_status(final_receiving_tok.id, "In Service")
 
     except (IndexError, ValueError) as e:
-        raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail=e)
+        raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 
 
@@ -106,7 +107,7 @@ def get_first_token():
         }
     
     except IndexError as e:
-        raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail=e)
+        raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail=str(e))
 
 @apiApp.get("/info/{disp_id}")
 def get_info(disp_id: str):
@@ -114,4 +115,4 @@ def get_info(disp_id: str):
         return manager.get_info(disp_id)
     
     except ValueError as e:
-        raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail=e)
+        raise HTTPException(status_code= status.HTTP_400_BAD_REQUEST, detail=str(e))

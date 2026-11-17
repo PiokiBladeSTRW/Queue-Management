@@ -21,6 +21,7 @@ class Token:
         if(self.pos == 0):
             self.status = "In Service"
 
+
     def update_pos(self, pos = -1):
         if(pos != -1):
             return

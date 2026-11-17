@@ -8,7 +8,8 @@ class TokenManager:
         return (self.get_length() - 1)
 
     def leave(self):
-        raise IndexError("Invalid Request! Queue is Empty!")
+        if(self.get_length() == 0):
+            raise IndexError("Invalid Request! Queue is Empty!")
 
         leaving_token = self.queue.pop( 0 )
 
@@ -53,7 +54,7 @@ class TokenManager:
         if(self.get_length() > 0):
             return self.queue[0]    
 
-        return IndexError("Invalid Request! Queue is Empty")
+        raise IndexError("Invalid Request! Queue is Empty")
 
 
     
